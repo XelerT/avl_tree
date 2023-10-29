@@ -1,5 +1,7 @@
 set(SRCS
         spin.cpp
+        node.cpp
+        avl.cpp
 )
 
 add_library(avl ${SRCS})
