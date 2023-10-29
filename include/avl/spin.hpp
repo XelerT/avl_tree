@@ -19,7 +19,7 @@ namespace binary_trees
                         spin_t (size_t capacity_) : spin(capacity_) {};
                         spin_t () = default;
 
-                        size_t insert (T &new_node_)
+                        size_t insert (const T &new_node_)
                         {
                                 if (spin.size() < spin.capacity())
                                         spin[size] = new_node_;

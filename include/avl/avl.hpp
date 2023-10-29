@@ -14,11 +14,11 @@ namespace binary_trees
 
                 public:
                         avl_t (size_t capacity_) : spin {capacity_} {};
-                        avl_t () = default;
+                        avl_t () : spin {DEFAULT_SPIN_SIZE} {};
 
                         void insert (const T &new_elem_, const key_type &key) 
                         {
-                                spin[root_index].insert(new_elem_, key);
+                                spin[root_index].insert(new_elem_, key, spin);
                         }
         };
 }
