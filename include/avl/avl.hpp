@@ -20,5 +20,8 @@ namespace binary_trees
                         {
                                 spin[root_index].insert(new_elem_, key, spin);
                         }
+
+                        size_t get_root_index () const { return root_index; }
+                        size_t get_capacity   () const { return spin.get_capacity(); }
         };
 }
