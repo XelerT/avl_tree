@@ -16,7 +16,7 @@ namespace binary_trees
                         avl_t (size_t capacity_) : spin {capacity_} {};
                         avl_t () = default;
 
-                        void add_element (const T &new_elem_, const key_type &key) 
+                        void insert (const T &new_elem_, const key_type &key) 
                         {
                                 spin[root_index].insert(new_elem_, key);
                         }
