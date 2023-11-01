@@ -1,5 +1,5 @@
 set(SRCS
-        spin.cpp
+        spine.cpp
         node.cpp
         avl.cpp
 )

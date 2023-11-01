@@ -7,37 +7,37 @@
 namespace binary_trees
 {
         template <typename T>
-        class spin_t
+        class spine_t
         {
                 private:
                         using vec_node = typename std::vector<T>;
 
-                        vec_node spin;
+                        vec_node spine;
                         size_t size = 0;
 
                 public:
-                        spin_t (size_t capacity_) : spin(capacity_) {};
-                        spin_t () = default;
+                        spine_t (size_t capacity_) : spine(capacity_) {};
+                        spine_t () = default;
 
                         size_t insert (const T &new_node_)
                         {
-                                if (size < spin.capacity())
-                                        spin[size] = new_node_;
+                                if (size < spine.capacity())
+                                        spine[size] = new_node_;
                                 else
-                                        spin.push_back(new_node_);
+                                        spine.push_back(new_node_);
 
                                 return size++;
                         }
 
                         void erase (const size_t index_)
                         {
-                                spin.erase(std::next(spin.begin(), index_));
+                                spine.erase(std::next(spine.begin(), index_));
                                 size--;
                         }
 
                         size_t get_size     () const { return size; }
-                        size_t get_capacity () const { return spin.capacity(); }
+                        size_t get_capacity () const { return spine.capacity(); }
 
-                        T& operator[] (const size_t index) { return spin[index]; }
+                        T& operator[] (const size_t index) { return spine[index]; }
         };
 }
