@@ -1,11 +1,17 @@
 #pragma once
 
+#include <format>
+
 #include "spin.hpp"
 #include "utils.hpp"
 
+#include "graphviz.hpp"
+
 namespace binary_trees
 {
-        template <typename T, typename key_type = int> 
+        using namespace graphviz;
+        
+        template <typename T, typename key_type = int>
         class node_t 
         {
                 private:
@@ -14,6 +20,8 @@ namespace binary_trees
 
                         T        elem {};
                         key_type key  {};
+
+                        graph_node_atr_t atr {};
 
                         void insert_in_child (const node_t &node_, size_t &child_index, spin_t<node_t> &spin_)
                         {
@@ -59,5 +67,65 @@ namespace binary_trees
 
                         T get_element    () const { return elem; }
                         key_type get_key () const { return key;  }
+
+                        // void graphviz_family     (std::ofstream &dot_file, spin_t<node_t> &spin_) const;
+                        // void graphviz_tie_family (std::ofstream &dot_file, spin_t<node_t> &spin_) const;
+
+                        void graphviz_family (std::ofstream &dot_file, spin_t<node_t> &spin_)
+                        {
+                                if (left_child_index != INVALID)
+                                        spin_[left_child_index].graphviz_family(dot_file, spin_);
+                                if (right_child_index != INVALID)
+                                        spin_[right_child_index].graphviz_family(dot_file, spin_);
+
+                                dot_file << dynamic_format(node_atr_sample, static_cast<void*>(this), atr.shape, atr.style, atr.height,
+                                                        atr.width, atr.fixedsize, atr.fillcolor, atr.fontsize,
+                                                        atr.penwidth);
+                                dot_file << dynamic_format(node_elem_key_sample, static_cast<void*>(this), elem, key);
+                        }
+
+                        void graphviz_tie_family (std::ofstream &dot_file, spin_t<node_t> &spin_)
+                        {
+                                if (left_child_index != INVALID)
+                                        spin_[left_child_index].graphviz_tie_family(dot_file, spin_);
+                                if (right_child_index != INVALID)
+                                        spin_[right_child_index].graphviz_tie_family(dot_file, spin_);
+
+                                if (left_child_index != INVALID)
+                                        dot_file << dynamic_format(nodes_tie_atr, static_cast<void*>(this), static_cast<void*>(&spin_[left_child_index]),
+                                                                "black", atr.arrowsize, atr.penwidth);
+                                if (right_child_index != INVALID)
+                                        dot_file << dynamic_format(nodes_tie_atr, static_cast<void*>(this), static_cast<void*>(&spin_[right_child_index]),
+                                                                "red", atr.arrowsize, atr.penwidth);
+                        }
         };
+
+        // inline void node_t<T>::graphviz_family (std::ofstream &dot_file, const spin_t<node_t<T>> &spin_) const
+        // {
+        //         if (left_child_index != INVALID)
+        //                 spin_[left_child_index].graphviz_family(dot_file, spin_);
+        //         if (right_child_index != INVALID)
+        //                 spin_[right_child_index].graphviz_family(dot_file, spin_);
+
+        //         dot_file << std::format(node_atr_sample, this, atr.shape, atr.style, atr.height,
+        //                                 atr.width, atr.fixedsize, atr.fillcolor, atr.fontsize,
+        //                                 atr.penwidth);
+
+        //         dot_file << std::format(node_elem_key_sample, node, elem, key);
+        // }
+
+        // inline void node_t<T>::graphviz_tie_family (std::ofstream &dot_file, const spin_t<node_t<T>> &spin_) const
+        // {
+        //         if (left_child_index != INVALID)
+        //                 spin_[left_child_index].graphviz_tie_family(dot_file, spin_);
+        //         if (right_child_index != INVALID)
+        //                 spin_[right_child_index].graphviz_tie_family(dot_file, spin_);
+
+        //         if (left_child_index != INVALID)
+        //                 dot_file << std::format(nodes_tie_atr, this, &spin_[left_child_index],
+        //                                         "black", atr.arrowsize, atr.penwidth);
+        //         if (right_child_index != INVALID)
+        //                 dot_file << std::format(nodes_tie_atr, this, &spin_[right_child_index],
+        //                                         "red", atr.arrowsize, atr.penwidth);
+        // }
 }

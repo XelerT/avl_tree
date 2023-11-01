@@ -21,17 +21,18 @@ namespace binary_trees
 
                         size_t insert (const T &new_node_)
                         {
-                                if (spin.size() < spin.capacity())
+                                if (size < spin.capacity())
                                         spin[size] = new_node_;
                                 else
                                         spin.push_back(new_node_);
-                                
-                                return ++size;
+
+                                return size++;
                         }
 
                         void erase (const size_t index_)
                         {
                                 spin.erase(std::next(spin.begin(), index_));
+                                size--;
                         }
 
                         size_t get_size     () const { return size; }
