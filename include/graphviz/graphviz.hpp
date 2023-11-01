@@ -27,12 +27,12 @@ namespace graphviz
                 const char *splines = "ortho";
         };
 
-        std::string digraph_atr_sample = "digraph {} {{                     \
-                                         \ngraph [dpi = {}];                     \
-                                         \nsplines = {};                         \
-                                         \n";
+        const std::string digraph_atr_sample = "digraph {} {{                         \
+                                              \ngraph [dpi = {}];                     \
+                                              \nsplines = {};                         \
+                                              \n";
 
-        const std::string node_atr_sample = "\nnode{}[shape = \"{}\", style = \"{}, filled\",                         \
+        const std::string node_atr_sample = "\nnode{}[shape = \"{}\", style = \"{}, filled\",                    \
                                         \nheight = {}, width = {}, fixedsize = {},                               \
                                         \nfillcolor = \"{}\",                                                    \
                                         \nfontsize = {},                                                         \
