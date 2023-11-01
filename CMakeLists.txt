@@ -2,11 +2,16 @@ cmake_minimum_required(VERSION 3.14)
 
 project(avl_tree)
 
-# version
+#build flags
+include(cmake/build_flags.cmake)
 
-if (NOT CMAKE_CXX_STANDARD AND NOT CMAKE_CXX_COMPILER)
+# version
+if (NOT CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_COMPILER)
         set(CMAKE_CXX_STANDARD 20)
 endif()
+
+message("CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
+message("CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
 
 set(default_build_type "Debug")
 set(GTESTS False CACHE BOOL "To build unitests")
@@ -56,3 +61,13 @@ endif()
 # 
 
 install()
+
+#custom targets
+
+add_custom_target(dot ALL
+        COMMAND ${CMAKE_COMMAND} "--graphviz=build/tree.dot" .
+        COMMAND dot -T png build/tree.dot -o tree.png
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+
+#
