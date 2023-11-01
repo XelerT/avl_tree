@@ -54,8 +54,8 @@ install(TARGETS ${PROJECT_NAME})
 
 # tests
 
-option(COE_BUILD_TESTS "Enable/disable tests" ON)
-if (COE_BUILD_TESTS)
+option(UNITESTS "Enable/disable tests" ON)
+if (UNITESTS)
         add_subdirectory(tests)
 endif()
 # 

@@ -18,13 +18,15 @@ namespace binary_trees
         {
                 private:
                         spine_t<node_t<T>> spine;
-                        size_t root_index = INVALID;
+                        size_t root_index = DEFAULT_ROOT_INDEX;
+                        T invalid_val;
 
                 public:
-                        avl_t (size_t capacity_) : spine {capacity_} {};
-                        avl_t () : spine {DEFAULT_SPINE_SIZE} {};
+                        avl_t (size_t capacity_, T &invalid_val_) : spine {capacity_}, invalid_val(invalid_val_) {};
+                        avl_t (T &invalid_val_) : spine {DEFAULT_SPINE_SIZE}, invalid_val(invalid_val_) {};
 
-                        void insert (const T &elem_, const key_type &key_);
+                        void insert (const T &data_, const key_type &key_);
+                        T get_data  (const key_type &key_) { return spine[root_index].get_data(key_, invalid_val, spine); }
 
                         size_t get_root_index () const { return root_index; }
                         size_t capacity       () const { return spine.get_capacity(); }
@@ -33,14 +35,16 @@ namespace binary_trees
                         void graphviz_dump (const std::string &tree_name = "tree");
         };
 
+//===================================================~~~DECLARATIONS~~~====================================================================
+
         template <typename T, typename key_type>
-        void avl_t<T, key_type>::insert (const T &elem_, const key_type &key_)
+        void avl_t<T, key_type>::insert (const T &data_, const key_type &key_)
         {
                 if (root_index == INVALID) {
-                        root_index = spine.insert(node_t(elem_, key_, spine.get_size()));
+                        root_index = spine.insert(node_t(data_, key_, spine.get_size()));
                         return;
                 }
-                spine[root_index].insert(elem_, key_, spine);
+                spine[root_index].insert(data_, key_, spine);
         }
 
         template <typename T, typename key_type>

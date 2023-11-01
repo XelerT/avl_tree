@@ -6,9 +6,9 @@ using namespace std;
 
 int main ()
 {
-        binary_trees::avl_t<int> tree{};
+        int invalid_val = 0xFFFFFF;
+        binary_trees::avl_t<int> tree{invalid_val};
         tree.insert(5, 5);
-        cout << tree.capacity() << " " << tree.size() << " " << tree.get_root_index() << endl;
         tree.insert(6, 6);
         tree.insert(7, 7);
         tree.insert(4, 4);
@@ -17,5 +17,4 @@ int main ()
         tree.insert(1, 1);
 
         tree.graphviz_dump();
-        cout << "Hello World!\n";
 }

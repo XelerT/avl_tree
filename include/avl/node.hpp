@@ -20,14 +20,14 @@ namespace binary_trees
                         size_t index             = INVALID;
                         int    branch_height     = 0;
 
-                        T        elem {};
+                        T        data {};
                         key_type key  {};
 
                         graph_node_atr_t atr {};
 
                         int insert_in_child (const node_t &node_, size_t &child_index, spine_t<node_t> &spine_);
 
-                        int create_insert_in_child (const T &elem_, const key_type &key_, 
+                        int create_insert_in_child (const T &data_, const key_type &key_, 
                                                     spine_t<node_t<T, key_type>> &spine_, 
                                                     size_t &child_index_);
 
@@ -41,19 +41,21 @@ namespace binary_trees
                         size_t rebalance (spine_t<node_t<T, key_type>> &spine_);
 
                 public:
-                        node_t (const T &elem_, const key_type &key_, const size_t index_) 
+                        node_t (const T &data_, const key_type &key_, const size_t index_) 
                                 :
-                                index(index_), elem(elem_), key(key_) {};
+                                index(index_), data(data_), key(key_) {};
                         node_t () = default;
 
                         size_t insert (const node_t &node_, spine_t<node_t<T, key_type>> &spine_);
-                        size_t insert (const T &elem_, const key_type &key_, spine_t<node_t<T, key_type>> &spine_);
+                        size_t insert (const T &data_, const key_type &key_, spine_t<node_t<T, key_type>> &spine_);
+
+                        T get_data (const key_type &key_, const T &invalid_val, spine_t<node_t<T, key_type>> &spine_);
 
                         auto get_right_child_index () const { return right_child_index; }
                         auto get_left_child_index  () const { return left_child_index;  }
                         auto get_branch_height     () const { return branch_height;     }
 
-                        T get_element    () const { return elem; }
+                        T get_data    () const { return data; }
                         key_type get_key () const { return key;  }
 
                         void graphviz_branch (std::ofstream &dot_file, spine_t<node_t<T, key_type>> &spine_);
@@ -61,6 +63,8 @@ namespace binary_trees
         };
 
 //===================================================~~~DECLARATIONS~~~====================================================================
+
+//---------------------------------------------------~~~~~~Private~~~~~--------------------------------------------------------------------
 
         template <typename T, typename key_type>
         int node_t<T, key_type>::insert_in_child (const node_t &node_, size_t &child_index, spine_t<node_t> &spine_)
@@ -74,14 +78,14 @@ namespace binary_trees
         }
 
         template <typename T, typename key_type>
-        int node_t<T, key_type>::create_insert_in_child (const T &elem_, const key_type &key_, 
+        int node_t<T, key_type>::create_insert_in_child (const T &data_, const key_type &key_, 
                                                          spine_t<node_t> &spine_,
                                                          size_t &child_index_)
         {
                 if (child_index_ != INVALID)
-                        spine_[child_index_].insert(node_t(elem_, key_, spine_.get_size()), spine_);
+                        spine_[child_index_].insert(node_t(data_, key_, spine_.get_size()), spine_);
                 else
-                        child_index_ = spine_.insert(node_t(elem_, key_, spine_.get_size()));
+                        child_index_ = spine_.insert(node_t(data_, key_, spine_.get_size()));
 
                 return NODE_HEIGHT;
         }
@@ -147,6 +151,8 @@ namespace binary_trees
                 return index;
         }
 
+//---------------------------------------------------~~~~~~Public~~~~~~--------------------------------------------------------------------
+
         template <typename T, typename key_type>
         size_t node_t<T, key_type>::insert (const node_t &node_, spine_t<node_t> &spine_)
         {
@@ -164,19 +170,39 @@ namespace binary_trees
         }
 
         template <typename T, typename key_type>
-        size_t node_t<T, key_type>::insert (const T &elem_, const key_type &key_, spine_t<node_t> &spine_)
+        size_t node_t<T, key_type>::insert (const T &data_, const key_type &key_, spine_t<node_t> &spine_)
         {
                 if (key_ <= key) {
-                        branch_height = create_insert_in_child(elem_, key_, spine_, left_child_index) +
+                        branch_height = create_insert_in_child(data_, key_, spine_, left_child_index) +
                                         NODE_HEIGHT;
                         left_child_index = spine_[left_child_index].rebalance(spine_);
                 } else {
-                        branch_height = create_insert_in_child(elem_, key_, spine_, right_child_index) +
+                        branch_height = create_insert_in_child(data_, key_, spine_, right_child_index) +
                                         NODE_HEIGHT;
                         right_child_index = spine_[right_child_index].rebalance(spine_);
                 }
 
                 return branch_height;
+        }
+
+        template <typename T, typename key_type>
+        T node_t<T, key_type>::get_data (const key_type &key_, const T &invalid_val, spine_t<node_t<T, key_type>> &spine_)
+        {
+                if (key == key_) {
+                        return data;
+                } else {
+                        T found_data;
+                        if (left_child_index != INVALID && key_ < key)
+                                found_data = spine_[left_child_index].get_data(key_, spine_);
+
+                        if (found_data != invalid_val) 
+                                return found_data;
+                        
+                        if (right_child_index != INVALID && key_ > key)
+                                return spine_[right_child_index].get_data(key_, spine_);
+                }
+
+                return invalid_val;         // need TAMPlATE INVALID VALUE
         }
 
         template <typename T, typename key_type>
@@ -190,7 +216,7 @@ namespace binary_trees
                 dot_file << dynamic_format(node_atr_sample, static_cast<void*>(this), atr.shape, atr.style, atr.height,
                                            atr.width, atr.fixedsize, atr.fillcolor, atr.fontsize,
                                            atr.penwidth);
-                dot_file << dynamic_format(node_elem_key_sample, static_cast<void*>(this), elem, key);
+                dot_file << dynamic_format(node_data_key_sample, static_cast<void*>(this), data, key);
         }
 
         template <typename T, typename key_type>
