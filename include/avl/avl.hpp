@@ -7,7 +7,7 @@
 #include "node.hpp"
 #include "spine.hpp"
 
-#include "graphviz.hpp"
+#include "graphviz/graphviz.hpp"
 
 namespace binary_trees
 {
@@ -26,7 +26,12 @@ namespace binary_trees
                         avl_t (T &invalid_val_) : spine {DEFAULT_SPINE_SIZE}, invalid_val(invalid_val_) {};
 
                         void insert (const T &data_, const key_type &key_);
-                        T get_data  (const key_type &key_) { return spine[root_index].get_data(key_, invalid_val, spine); }
+                        
+                        T get_data  (const key_type &key_) 
+                        { return spine[root_index].get_data(key_, invalid_val, spine); }
+                        
+                        int count_elems_in_range (const key_type &low_key_, const key_type &high_key_) 
+                        { return spine[root_index].count_elems_in_range(low_key_, high_key_, spine); }
 
                         size_t get_root_index () const { return root_index; }
                         size_t capacity       () const { return spine.get_capacity(); }

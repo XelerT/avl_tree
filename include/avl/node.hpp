@@ -5,7 +5,7 @@
 #include "spine.hpp"
 #include "utils.hpp"
 
-#include "graphviz.hpp"
+#include "graphviz/graphviz.hpp"
 
 namespace binary_trees
 {
@@ -50,6 +50,8 @@ namespace binary_trees
                         size_t insert (const T &data_, const key_type &key_, spine_t<node_t<T, key_type>> &spine_);
 
                         T get_data (const key_type &key_, const T &invalid_val, spine_t<node_t<T, key_type>> &spine_);
+                        int count_elems_in_range (const key_type &low_key_, const key_type &high_key_, spine_t<node_t> &spine_); 
+
 
                         auto get_right_child_index () const { return right_child_index; }
                         auto get_left_child_index  () const { return left_child_index;  }
@@ -186,23 +188,46 @@ namespace binary_trees
         }
 
         template <typename T, typename key_type>
-        T node_t<T, key_type>::get_data (const key_type &key_, const T &invalid_val, spine_t<node_t<T, key_type>> &spine_)
+        T node_t<T, key_type>::get_data (const key_type &key_, const T &invalid_val_,
+                                         spine_t<node_t> &spine_)
         {
                 if (key == key_) {
                         return data;
                 } else {
-                        T found_data;
-                        if (left_child_index != INVALID && key_ < key)
-                                found_data = spine_[left_child_index].get_data(key_, spine_);
+                        T found_data {invalid_val_};
+                        if (key_ < key && left_child_index != INVALID)
+                                found_data = spine_[left_child_index].get_data(key_, invalid_val_, spine_);
 
-                        if (found_data != invalid_val) 
+                        if (found_data != invalid_val_) 
                                 return found_data;
                         
-                        if (right_child_index != INVALID && key_ > key)
-                                return spine_[right_child_index].get_data(key_, spine_);
+                        if (key_ > key && right_child_index != INVALID)
+                                return spine_[right_child_index].get_data(key_, invalid_val_, spine_);
                 }
+                return invalid_val_;
+        }
 
-                return invalid_val;         // need TAMPlATE INVALID VALUE
+        template <typename T, typename key_type>
+        int node_t<T, key_type>::count_elems_in_range (const key_type &low_key_, 
+                                                       const key_type &high_key_, spine_t<node_t> &spine_)
+        {
+                int n_nodes = 0;
+
+                if (key >= low_key_  && right_child_index != INVALID &&
+                    key <= high_key_ && left_child_index != INVALID)
+                        n_nodes += NODE_HEIGHT + spine_[left_child_index].count_elems_in_range(low_key_, high_key_, spine_)
+                                               + spine_[right_child_index].count_elems_in_range(low_key_, high_key_, spine_); 
+                else if (key < low_key_ || right_child_index != INVALID)
+                        n_nodes += spine_[right_child_index].count_elems_in_range(low_key_, high_key_, spine_);
+                else if (left_child_index != INVALID)
+                        n_nodes += spine_[left_child_index].count_elems_in_range(low_key_, high_key_, spine_);
+                
+                if (key > low_key_ && key < high_key_)
+                        n_nodes += NODE_HEIGHT;
+                if (key == low_key_ && key == high_key_)
+                        n_nodes += NODE_HEIGHT;
+                
+                return n_nodes;
         }
 
         template <typename T, typename key_type>

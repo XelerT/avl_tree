@@ -33,9 +33,9 @@ TEST (avl, insert)
         int key2   = 7;
         int key420 = 420;
 
-        EXPECT_EQ(tree.get_root_index(), DEFAULT_ROOT_INDEX);
-        EXPECT_EQ(tree.get_size(), 3);
+        EXPECT_EQ(tree.get_root_index(), 0);
+        EXPECT_EQ(tree.size(), 3);
         EXPECT_EQ(tree.get_data(key1),   key1);
         EXPECT_EQ(tree.get_data(key2),   key2);
-        EXPECT_EQ(tree.get_data(key420), INVALID_DATA);
+        EXPECT_EQ(tree.get_data(key420), invalid_val);
 }

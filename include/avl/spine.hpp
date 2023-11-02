@@ -17,7 +17,7 @@ namespace binary_trees
 
                 public:
                         spine_t (size_t capacity_) : spine(capacity_) {};
-                        spine_t () = default;
+                        spine_t () : spine() {};
 
                         size_t insert (const T &new_node_);
 

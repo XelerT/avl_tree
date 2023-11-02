@@ -1,6 +1,8 @@
 set(SRC_LIST
         avl
         graphviz
+        ui
+        utils
 )
 
 foreach(SRC ${SRC_LIST})
