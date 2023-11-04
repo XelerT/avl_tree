@@ -6,6 +6,7 @@
 
 #include "node.hpp"
 #include "spine.hpp"
+#include "utils.hpp"
 
 #include "graphviz/graphviz.hpp"
 
@@ -49,7 +50,11 @@ namespace binary_trees
                         root_index = spine.insert(node_t(data_, key_, spine.get_size()));
                         return;
                 }
+                if (spine.get_size() >= spine.get_capacity() - 1) {
+                        spine.reserve(spine.get_capacity() * CAPACITY_RESERVE_FACTOR);
+                }
                 spine[root_index].insert(data_, key_, spine);
+                root_index = spine[root_index].rebalance(spine);
         }
 
         template <typename T, typename key_type>

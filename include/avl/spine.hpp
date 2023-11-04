@@ -20,6 +20,7 @@ namespace binary_trees
                         spine_t () : spine() {};
 
                         size_t insert (const T &new_node_);
+                        void reserve (size_t new_cap) { spine.reserve(new_cap); }
 
                         void erase (const size_t index_);
 

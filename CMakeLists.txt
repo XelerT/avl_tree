@@ -64,10 +64,10 @@ install()
 
 #custom targets
 
-add_custom_target(dot ALL
-        COMMAND ${CMAKE_COMMAND} "--graphviz=tree.dot" .
-        COMMAND dot -T png tree.dot -o tree.png
-        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-)
+# add_custom_target(dot ALL
+#         COMMAND ${CMAKE_COMMAND} "--graphviz=tree.dot" .
+#         COMMAND dot -T png tree.dot -o tree.png
+#         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+# )
 
 #
