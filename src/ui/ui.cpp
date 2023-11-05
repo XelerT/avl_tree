@@ -2,25 +2,37 @@
 
 #include "ui.hpp"
 #include "avl/avl.hpp"
+#include "utils/std.hpp"
 
 using namespace std;
+
+namespace
+{
+        int get_number (const char *str, int &val)
+        {
+                val = stoi(str);
+                return length(val);
+        }
+} // anonymous namespace
 
 vector<pair<char, pair<int, int>>>
 get_user_data ()
 {
-        char cmd;
         int val1 = 0;
         int val2 = 0;
 
         vector<pair<char, pair<int, int>>> input {};
+        string input_str {};
+        getline(cin, input_str);
+        auto input_length = input_str.length();
 
-        while (cin >> cmd)
-                if (cmd == 'k') {
-                        cin >> val1;
+        for (size_t i = 0; i < input_length; i++)
+                if (input_str[i] == 'k') {
+                        i += get_number(&input_str[++i], val1);
                         input.push_back({'k', {val1, 0}});
-                } else if (cmd == 'q') {
-                        cin >> val1;
-                        cin >> val2;
+                } else if (input_str[i] == 'q') {
+                        i += get_number(&input_str[++i], val1);
+                        i += get_number(&input_str[++i], val2);
                         input.push_back({'q', {val1, val2}});
                 }
 
@@ -46,7 +58,7 @@ vector<int> parse_input_data (vector<pair<char, pair<int, int>>> &input)
                         throw std::runtime_error("Unknown command.");
                 }
         }
-        tree.graphviz_dump();
+        // tree.graphviz_dump();
 
         return output_data;
 }

@@ -79,6 +79,7 @@ namespace binary_trees
         {
                 if (child_index != INVALID) {
                         // std::cout << "key1=" << key << "\n";
+                        std::cout << spine_.get_size() << "\n"; 
                         spine_[child_index].insert(node_, spine_);
                 }
                 else {

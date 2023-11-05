@@ -1,5 +1,6 @@
 set(SRCS
         std_vector.cpp
+        std.cpp
 )
 
 add_library(utils ${SRCS})
