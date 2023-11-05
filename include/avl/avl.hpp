@@ -24,7 +24,7 @@ namespace binary_trees
 
                 public:
                         avl_t (size_t capacity_, T &invalid_val_) : spine {capacity_}, invalid_val(invalid_val_) {};
-                        avl_t (T &invalid_val_) : spine {DEFAULT_SPINE_SIZE}, invalid_val(invalid_val_) {};
+                        avl_t (T &invalid_val_) : spine {}, invalid_val(invalid_val_) {};
 
                         void insert (const T &data_, const key_type &key_);
                         

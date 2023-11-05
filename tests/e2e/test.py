@@ -17,6 +17,9 @@ class TERMINAL_COLORS:
         BOLD      = '\033[1m'
         UNDERLINE = '\033[4m'
 
+class ERRORS:
+        ERROR = -1
+
 
 data_files_names = []
 log_file = open("tests_log.txt", "w")
@@ -63,8 +66,14 @@ def get_correct_output (n_triangles, data):
 
 def parse_data_file (file_name):
         with open(file_name) as file:
-                n_nodes = int(next(file))
-                return n_nodes
+                try:
+                        n_nodes = int(next(file))
+                        return n_nodes
+                except:
+                        print(TERMINAL_COLORS.WARNING            + \
+                                f"File {file_name} is broken.\n" + \
+                                TERMINAL_COLORS.DEFAULT
+                             )                        
 
 
 def gen_data(file_name):
@@ -72,12 +81,17 @@ def gen_data(file_name):
         high_range_boarder = random.randint(low_range_boarder, 0xFF)
         
         data = []
+        already_in_data = {}
         n_nodes = parse_data_file(file_name)
         correct_output = 0
         
         for i in range(n_nodes):
-                new_node = random.randint(-0xFF, 0xFF)
+                new_node = random.randint(-0xFFFF, 0xFFFF)
+                while (new_node in already_in_data.keys()):
+                        new_node = random.randint(-0xFFFF, 0xFFFF)
                 
+                already_in_data.update({new_node : new_node})
+
                 if (low_range_boarder <= new_node <= high_range_boarder):
                         correct_output += 1
                 data.append("k")
@@ -123,5 +137,6 @@ def run_e2e_tests(app_name):
 if __name__ == "__main__":
         get_data_files_names()
         run_e2e_tests("./avl_tree")
+
 
 log_file.close()

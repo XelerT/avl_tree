@@ -35,9 +35,9 @@ namespace binary_trees
         template <typename T>
         size_t spine_t<T>::insert (const T &new_node_)
         {
-                if (size < spine.capacity())
-                        spine[size] = new_node_;
-                else
+                // if (size < spine.capacity())
+                //         spine[size] = new_node_;
+                // else
                         spine.push_back(new_node_);
 
                 return size++;
