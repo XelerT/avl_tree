@@ -39,6 +39,10 @@ namespace binary_trees
                         size_t size           () const { return spine.get_size(); }
 
                         void graphviz_dump (const std::string &tree_name = "tree");
+
+                        int distance (const key_type &low_key_, 
+                                      const key_type &high_key_)
+                        { return spine[root_index].distance(low_key_, high_key_, spine); }
         };
 
 //===================================================~~~DECLARATIONS~~~====================================================================

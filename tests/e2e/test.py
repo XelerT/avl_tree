@@ -77,8 +77,8 @@ def parse_data_file (file_name):
 
 
 def gen_data(file_name):
-        low_range_boarder = random.randint(-0xFF, 0xFF)
-        high_range_boarder = random.randint(low_range_boarder, 0xFF)
+        low_range_boarder = random.randint(-0xFFFF, 0xFFFF)
+        high_range_boarder = random.randint(low_range_boarder, 0xFFFF)
         
         data = []
         already_in_data = {}
@@ -105,6 +105,10 @@ def gen_data(file_name):
         
 
 def run_e2e_test(app2run, input_data):
+        print(TERMINAL_COLORS.OKCYAN                    + \
+                        f"Run {app2run}."               + \
+                TERMINAL_COLORS.DEFAULT
+                )
         pipe = Popen([app2run], stdout=PIPE, stdin=PIPE)
         
         data_str = str()
@@ -118,25 +122,35 @@ def run_e2e_test(app2run, input_data):
         return stdout_data[0].decode(), exec_time
         
 
-def run_e2e_tests(app_name):
+def check_app_output(n_test, data, correct_output, output_data, exec_time):
+        correct_str = ''.join(str(elem) for elem in correct_output)
+        check_output_data(n_test, output_data[:-2], correct_str, exec_time)
+
+        return correct_output
+
+
+def run_e2e_tests(app_name, app2_name=str()):
         for (n_test, file_name) in zip(range(len(data_files_names)), data_files_names):
                 # data, correct_output = parse_data_file(file_name)
                 data, correct_output = gen_data(file_name)
 
                 output_data, exec_time = run_e2e_test(app_name, data)
+                correct_str = check_app_output(n_test, data, correct_output, output_data, exec_time)
                 
-                correct_str = ''.join(str(elem) for elem in correct_output)
-                check_output_data(n_test, output_data[:-2], correct_str, exec_time)
-
                 log_file.write(f"Input data:\n ")
                 for dat in data:
                         log_file.write(f"{dat} ")
                 log_file.write(f"\n Correct output:\n {correct_str} \n Output: \n {output_data[:-2]}\n\n")
+                
+                if (app2_name):
+                        output_data, exec_time = run_e2e_test(app2_name, data)
+                        check_app_output(n_test, data, correct_output, output_data, exec_time)
+                
 
 
 if __name__ == "__main__":
         get_data_files_names()
-        run_e2e_tests("./avl_tree")
+        run_e2e_tests("./avl_tree", "./set")
 
 
 log_file.close()

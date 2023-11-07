@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(avl_tree)
+option(SET_DISTANCE "Enable/disable compiling set." OFF)
+if (SET_DISTANCE)
+        project(set)
+else()
+        project(avl_tree)
+endif()
 
 #build flags
 include(cmake/build_flags.cmake)
@@ -22,7 +27,7 @@ endif()
 
 # flags
 
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall")
+# set(CMAKE_CXX_FLAGS_DEBUG "-Wall")
 
 # collect srcs 
 
@@ -31,7 +36,7 @@ message(STATUS "Collected srcs: ${SRC_LIST}")
 
 message("Building avl_tree in ${CMAKE_BUILD_TYPE}.")
         
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
@@ -46,7 +51,13 @@ endforeach()
         
 # create main.cpp
 
-add_executable(${PROJECT_NAME} main.cpp)
+
+if (SET_DISTANCE)
+        add_executable(${PROJECT_NAME} src/set_comparison/set.cpp)
+else()
+        add_executable(${PROJECT_NAME} main.cpp)
+endif()
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} ${SRC_LIST})
         

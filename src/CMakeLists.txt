@@ -3,6 +3,7 @@ set(SRC_LIST
         graphviz
         ui
         utils
+        set_comparison
 )
 
 foreach(SRC ${SRC_LIST})

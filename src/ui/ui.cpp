@@ -53,12 +53,14 @@ vector<int> parse_input_data (vector<pair<char, pair<int, int>>> &input)
                 if (elem.first == 'k') {
                         tree.insert(elem.second.first, elem.second.first);
                 } else if (elem.first == 'q') {
-                        output_data.push_back(tree.count_elems_in_range(elem.second.first, elem.second.second));
+                        // output_data.push_back(tree.count_elems_in_range(elem.second.first, elem.second.second));
+                        output_data.push_back(tree.distance(elem.second.first, elem.second.second));
+                
                 } else {
                         throw std::runtime_error("Unknown command.");
                 }
         }
-        // tree.graphviz_dump();
+        tree.graphviz_dump();
 
         return output_data;
 }
