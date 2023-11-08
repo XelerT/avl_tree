@@ -11,9 +11,9 @@ endif()
 include(cmake/build_flags.cmake)
 
 # version
-if (NOT CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_COMPILER)
-        set(CMAKE_CXX_STANDARD 20)
-endif()
+set(CMAKE_CXX_STANDARD 20)
+# if (NOT CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_COMPILER)
+# endif()
 
 message("CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
 message("CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
@@ -51,9 +51,8 @@ endforeach()
         
 # create main.cpp
 
-
 if (SET_DISTANCE)
-        add_executable(${PROJECT_NAME} src/set_comparison/set.cpp)
+        add_executable(${PROJECT_NAME} src/set_comparison/std_set.cpp)
 else()
         add_executable(${PROJECT_NAME} main.cpp)
 endif()
@@ -65,7 +64,7 @@ install(TARGETS ${PROJECT_NAME})
 
 # tests
 
-option(UNITESTS "Enable/disable tests" ON)
+option(UNITESTS "Enable/disable tests" OFF)
 if (UNITESTS)
         add_subdirectory(tests)
 endif()

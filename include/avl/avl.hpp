@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <format>
+#include <memory>
 
 #include "node.hpp"
 #include "spine.hpp"
@@ -19,12 +20,17 @@ namespace binary_trees
         {
                 private:
                         spine_t<node_t<T>> spine;
+                        // shared_ptr<spine_t<node_t<T>>> spine;
                         size_t root_index = DEFAULT_ROOT_INDEX;
                         T invalid_val;
 
                 public:
                         avl_t (size_t capacity_, T &invalid_val_) : spine {capacity_}, invalid_val(invalid_val_) {};
                         avl_t (T &invalid_val_) : spine {}, invalid_val(invalid_val_) {};
+                        // avl_t (size_t capacity_, T &invalid_val_):
+                        //         spine(std::make_shared<spine_t<node_t<T>>>{capacity_}), invalid_val(invalid_val_) {};
+                        // avl_t (T &invalid_val_):
+                        //         spine(std::make_shared<spine_t<node_t<T>>>{}), invalid_val(invalid_val_) {};
 
                         void insert (const T &data_, const key_type &key_);
                         
@@ -42,7 +48,12 @@ namespace binary_trees
 
                         int distance (const key_type &low_key_, 
                                       const key_type &high_key_)
-                        { return spine[root_index].distance(low_key_, high_key_, spine); }
+                        { 
+                                if (root_index != INVALID)
+                                        return spine[root_index].distance(low_key_, high_key_, spine);
+                                else
+                                        return 0;
+                        }
         };
 
 //===================================================~~~DECLARATIONS~~~====================================================================
@@ -51,6 +62,7 @@ namespace binary_trees
         void avl_t<T, key_type>::insert (const T &data_, const key_type &key_)
         {
                 if (root_index == INVALID) {
+                        // root_index = spine.insert(node_t(data_, key_, spine.get_size(), spine));
                         root_index = spine.insert(node_t(data_, key_, spine.get_size()));
                         return;
                 }

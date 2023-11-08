@@ -20,6 +20,7 @@ class TERMINAL_COLORS:
 class ERRORS:
         ERROR = -1
 
+GEN_DATA_MAX = 0xFFFFFFF
 
 data_files_names = []
 log_file = open("tests_log.txt", "w")
@@ -77,8 +78,8 @@ def parse_data_file (file_name):
 
 
 def gen_data(file_name):
-        low_range_boarder = random.randint(-0xFFFF, 0xFFFF)
-        high_range_boarder = random.randint(low_range_boarder, 0xFFFF)
+        low_range_boarder = random.randint(-GEN_DATA_MAX, GEN_DATA_MAX)
+        high_range_boarder = random.randint(low_range_boarder, GEN_DATA_MAX)
         
         data = []
         already_in_data = {}
@@ -86,9 +87,9 @@ def gen_data(file_name):
         correct_output = 0
         
         for i in range(n_nodes):
-                new_node = random.randint(-0xFFFF, 0xFFFF)
+                new_node = random.randint(-GEN_DATA_MAX, GEN_DATA_MAX)
                 while (new_node in already_in_data.keys()):
-                        new_node = random.randint(-0xFFFF, 0xFFFF)
+                        new_node = random.randint(-GEN_DATA_MAX, GEN_DATA_MAX)
                 
                 already_in_data.update({new_node : new_node})
 
@@ -146,7 +147,6 @@ def run_e2e_tests(app_name, app2_name=str()):
                         output_data, exec_time = run_e2e_test(app2_name, data)
                         check_app_output(n_test, data, correct_output, output_data, exec_time)
                 
-
 
 if __name__ == "__main__":
         get_data_files_names()

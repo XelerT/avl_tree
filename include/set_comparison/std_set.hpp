@@ -4,6 +4,7 @@
 #include <set>
 #include <utility>
 #include <iostream>
+#include <chrono>
 
 #include "ui/ui.hpp"
 
@@ -26,7 +27,12 @@ std::vector<T> parse_input_data4set (std::vector<std::pair<char, std::pair<T, ke
                 if (elem.first == 'k') {
                         tree.insert(elem.second.first);
                 } else if (elem.first == 'q') {
+                        // auto start = std::chrono::high_resolution_clock::now();
                         output_data.push_back(find_n_elems_in_range(tree, elem.second.first, elem.second.second));
+                        // auto stop = std::chrono::high_resolution_clock::now();
+
+                        // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+                        // std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
                 } else {
                         throw std::runtime_error("Unknown command.");
                 }

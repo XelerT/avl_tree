@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <format>
 
 #include "spine.hpp"
@@ -104,7 +105,6 @@ namespace binary_trees
                         spine_[child_index].insert(node_, spine_);
                 else
                         child_index = spine_.insert(node_);
-
                 return NODE_HEIGHT;
         }
 
@@ -160,6 +160,8 @@ namespace binary_trees
                         branch_height = spine_[right_child_index].branch_height + NODE_HEIGHT;
                 else if (left_child_index != INVALID)
                         branch_height = spine_[left_child_index].branch_height + NODE_HEIGHT;
+                else    
+                        branch_height = 0;
         }
 
         template <typename T, typename key_type>
@@ -177,7 +179,6 @@ namespace binary_trees
                 auto old_left_child_index = left_child_index;
                 
                 left_child_index = spine_[left_child_index].get_right_child_index();
-                set_rotated_branch_height(left_child_index, right_child_index, old_left_child_index, spine_);
                 spine_[old_left_child_index].set_right_child_index(index);
 
                 spine_[old_left_child_index].parent_index = parent_index;
@@ -198,7 +199,6 @@ namespace binary_trees
                 auto old_right_child_index = right_child_index;
 
                 right_child_index = spine_[right_child_index].get_left_child_index();
-                set_rotated_branch_height(right_child_index, left_child_index, old_right_child_index, spine_);
                 spine_[old_right_child_index].set_left_child_index(index);
                 
                 spine_[old_right_child_index].parent_index = parent_index;
@@ -311,6 +311,8 @@ namespace binary_trees
                                         NODE_HEIGHT;
                         right_child_index = spine_[right_child_index].rebalance(spine_);
                         size++;
+                } else if (node_.key == key) {
+                        return 0;
                 }
 
                 return branch_height;
@@ -329,6 +331,8 @@ namespace binary_trees
                                         NODE_HEIGHT;
                         right_child_index = spine_[right_child_index].rebalance(spine_);
                         size++;
+                } else if (key_ == key) {
+                        return 0;
                 }
                 return branch_height;
         }
@@ -435,16 +439,12 @@ namespace binary_trees
         {
                 auto lower_bound_index  = lower_bound(low_key_, spine_);
                 auto higher_bound_index = higher_bound(high_key_, spine_);
+
                 if (lower_bound_index == INVALID || higher_bound_index == INVALID)
                         return 0;
 
-                // std::cout << lower_bound_index << "=low\n";
-                // std::cout << higher_bound_index << "=high\n";
-
                 auto lower_rank  = spine_[lower_bound_index].calculate_rank(spine_); 
-                // std::cout << lower_rank << " lower_bound=" << spine_[lower_bound_index].get_key() << "\n";
                 auto higher_rank = spine_[higher_bound_index].calculate_rank(spine_);
-                // std::cout << higher_rank << " higher_bound=" << spine_[higher_bound_index].get_key() << "\n";
 
                 if (lower_rank == higher_rank)
                         return NODE_HEIGHT;
@@ -465,7 +465,7 @@ namespace binary_trees
                 dot_file << dynamic_format(node_atr_sample, static_cast<const void* const>(this), atr.shape, atr.style, atr.height,
                                            atr.width, atr.fixedsize, atr.fillcolor, atr.fontsize,
                                            atr.penwidth);
-                dot_file << dynamic_format(node_data_key_sample, static_cast<const void* const>(this), data, key, parent_index, index);
+                dot_file << dynamic_format(node_data_key_sample, static_cast<const void* const>(this), data, key, parent_index, branch_height);
         }
 
         template <typename T, typename key_type>

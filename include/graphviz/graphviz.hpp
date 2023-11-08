@@ -23,7 +23,7 @@ namespace graphviz
         };
 
         struct digraph_t {
-                int dpi             =     150;
+                int dpi             =     50;
                 const char *splines = "ortho";
         };
 
@@ -41,7 +41,7 @@ namespace graphviz
 
         const std::string edge_atr_sample = "\nedge[penwidth = {}, color = \"{}\"];";
 
-        const std::string node_data_key_sample  = "node{} [shape = record label = \"{{ {} | key_val: {} | parent: {} | index: {} }}\"];\n";
+        const std::string node_data_key_sample  = "node{} [shape = record label = \"{{ {} | key_val: {} | parent: {} | height: {} }}\"];\n";
 
         const std::string nodes_tie_atr = "node{} -> node{} [color = {} arrowsize = {} penwidth = {}];\n";
 
