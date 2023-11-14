@@ -52,7 +52,7 @@ TEST (node, insert_datas)
         EXPECT_EQ(node.get_left_child_index(),  INVALID);
 
         EXPECT_EQ(node.get_data(), 42);
-        EXPECT_EQ(node.get_key(),      0);
+        EXPECT_EQ(node.get_key(),   0);
 
         spine.insert(node);
         node.insert(42, -1,  spine);
@@ -62,8 +62,8 @@ TEST (node, insert_datas)
         EXPECT_NE(node.get_left_child_index(),  INVALID);
 
         EXPECT_EQ(spine[node.get_left_child_index()].get_data(), 42);
-        EXPECT_EQ(spine[node.get_left_child_index()].get_key(),     -1);
+        EXPECT_EQ(spine[node.get_left_child_index()].get_key(),  -1);
 
         EXPECT_EQ(spine[node.get_right_child_index()].get_data(), 42);
-        EXPECT_EQ(spine[node.get_right_child_index()].get_key(),      1);
+        EXPECT_EQ(spine[node.get_right_child_index()].get_key(),   1);
 }

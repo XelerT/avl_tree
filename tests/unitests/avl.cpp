@@ -8,23 +8,14 @@ TEST (avl, default_init)
         avl_t<int> tree {invalid_val};
 
         EXPECT_EQ(tree.get_root_index(), DEFAULT_ROOT_INDEX);
-        EXPECT_EQ(tree.capacity(), DEFAULT_SPINE_SIZE);
-}
-
-TEST (avl, init)
-{
-        int invalid_val = 0xFFFFFF;
-        avl_t<int> tree {42, invalid_val};
-
-        EXPECT_EQ(tree.get_root_index(), DEFAULT_ROOT_INDEX);
-        EXPECT_EQ(tree.capacity(), 42);
+        EXPECT_EQ(tree.capacity(), 0);
 }
 
 // void insert (const T &data_, const key_type &key_);
 TEST (avl, insert)
 {
         int invalid_val = 0xFFFFFF;
-        avl_t<int> tree {42, invalid_val};
+        avl_t<int> tree {invalid_val};
         tree.insert(6, 6);
         tree.insert(7, 7);
         tree.insert(4, 4);

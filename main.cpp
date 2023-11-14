@@ -9,5 +9,5 @@ using namespace std;
 int main ()
 {
         auto user_data = get_user_data();
-        print(parse_input_data(user_data));
+        println(parse_input_data(user_data));
 }

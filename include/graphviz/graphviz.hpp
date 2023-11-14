@@ -1,6 +1,6 @@
 #pragma once
 
-#include <format>
+#include "../../dep/fmt/include/fmt/core.h"
 
 namespace graphviz
 {
@@ -48,6 +48,6 @@ namespace graphviz
         template<typename... Args>
         std::string dynamic_format(std::string_view rt_fmt_str, Args&&... args)
         {
-                return std::vformat(rt_fmt_str, std::make_format_args(args...));
+                return fmt::vformat(rt_fmt_str, fmt::make_format_args(args...));
         }
 }

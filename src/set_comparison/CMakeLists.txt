@@ -1,5 +1,5 @@
 set(SRCS
-        std_set.cpp
+        set_comparison.cpp
 )
 
 add_library(set_comparison ${SRCS})

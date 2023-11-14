@@ -12,8 +12,6 @@ include(cmake/build_flags.cmake)
 
 # version
 set(CMAKE_CXX_STANDARD 20)
-# if (NOT CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_COMPILER)
-# endif()
 
 message("CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
 message("CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
@@ -25,9 +23,18 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
 endif()
 
-# flags
+# collect dependencies
 
-# set(CMAKE_CXX_FLAGS_DEBUG "-Wall")
+add_subdirectory(dep)
+message(STATUS "Collected deps: ${DEP_LIST}")
+        
+# deps
+
+foreach(DEP ${DEP_LIST})
+        target_include_directories(${DEP} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dep/${DEP}/include)
+        target_include_directories(${DEP} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dep/)
+        install(TARGETS ${DEP} DESTINATION bin)
+endforeach()
 
 # collect srcs 
 
@@ -48,19 +55,16 @@ foreach(SRC ${SRC_LIST})
                 
         install(TARGETS ${SRC} DESTINATION bin)
 endforeach()
-        
+
 # create main.cpp
 
 if (SET_DISTANCE)
-        add_executable(${PROJECT_NAME} src/set_comparison/std_set.cpp)
+        add_executable(${PROJECT_NAME} std_set.cpp)
 else()
         add_executable(${PROJECT_NAME} main.cpp)
 endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(${PROJECT_NAME} ${SRC_LIST})
-        
-install(TARGETS ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} ${SRC_LIST} ${DEP_LIST})
 
 # tests
 
@@ -68,16 +72,6 @@ option(UNITESTS "Enable/disable tests" OFF)
 if (UNITESTS)
         add_subdirectory(tests)
 endif()
-# 
+#
 
 install()
-
-#custom targets
-
-# add_custom_target(dot ALL
-#         COMMAND ${CMAKE_COMMAND} "--graphviz=tree.dot" .
-#         COMMAND dot -T png tree.dot -o tree.png
-#         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-# )
-
-#

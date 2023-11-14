@@ -2,7 +2,7 @@
 
 #include <string>
 #include <fstream>
-#include <format>
+// #include <format>
 #include <memory>
 
 #include "node.hpp"
@@ -25,7 +25,7 @@ namespace binary_trees
                         T invalid_val;
 
                 public:
-                        avl_t (size_t capacity_, T &invalid_val_) : spine {capacity_}, invalid_val(invalid_val_) {};
+                        // avl_t (size_t capacity_, T &invalid_val_) : spine {capacity_}, invalid_val(invalid_val_) {};
                         avl_t (T &invalid_val_) : spine {}, invalid_val(invalid_val_) {};
                         // avl_t (size_t capacity_, T &invalid_val_):
                         //         spine(std::make_shared<spine_t<node_t<T>>>{capacity_}), invalid_val(invalid_val_) {};
