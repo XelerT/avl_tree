@@ -7,7 +7,10 @@ int length (int number, int base)
         if (number < 0) {
                 len++;
                 number *= -1;
+        } else if (number == 0) {
+                return 1;
         }
+        
         while (number > 0) {
                 number /= base;
                 len++;
