@@ -57,9 +57,8 @@ vector<int> parse_input_data (vector<pair<char, pair<int, int>>> &input)
                 } else if (elem.first == 'q') {
                         if (elem.second.first >= elem.second.second)
                                 output_data.push_back(0);
-                        else {
+                        else
                                 output_data.push_back(tree.distance(elem.second.first, elem.second.second));
-                        }
                 } else {
                         throw std::runtime_error("Unknown command.");
                 }

@@ -135,12 +135,13 @@ def run_e2e_tests(app_name, app2_name=str()):
                 # data, correct_output = parse_data_file(file_name)
                 data, correct_output = gen_data(file_name)
 
-                output_data, exec_time = run_e2e_test(app_name, data)
-                correct_str = check_app_output(n_test, data, correct_output, output_data, exec_time)
-                
                 log_file.write(f"Input data:\n ")
                 for dat in data:
                         log_file.write(f"{dat} ")
+                        
+                output_data, exec_time = run_e2e_test(app_name, data)
+                correct_str = check_app_output(n_test, data, correct_output, output_data, exec_time)
+                
                 log_file.write(f"\n Correct output:\n {correct_str} \n Output: \n {output_data[:-2]}\n\n")
                 
                 if (app2_name):

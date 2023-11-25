@@ -426,10 +426,14 @@ namespace binary_trees
                 } else if (right_child_index != INVALID) {
                         if (key < bound_key_) {
                                 bound = spine_[right_child_index].higher_bound(bound_key_, spine_);
-                                if (spine_[bound].key > bound_key_)
+                                if (bound != INVALID && spine_[bound].key > bound_key_)
                                         bound = index;
                         }
                 }
+                if (bound != INVALID && spine_[bound].key > bound_key_)
+                        return INVALID;
+                if (bound == INVALID && key < bound_key_)
+                        return index;
                 return bound;
         }
 
