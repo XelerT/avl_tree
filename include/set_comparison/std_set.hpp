@@ -28,7 +28,10 @@ std::vector<T> parse_input_data4set (std::vector<std::pair<char, std::pair<T, ke
                         tree.insert(elem.second.first);
                 } else if (elem.first == 'q') {
                         // auto start = std::chrono::high_resolution_clock::now();
-                        output_data.push_back(find_n_elems_in_range(tree, elem.second.first, elem.second.second));
+                         if (elem.second.first >= elem.second.second)
+                                output_data.push_back(0);
+                        else
+                                output_data.push_back(find_n_elems_in_range(tree, elem.second.first, elem.second.second));
                         // auto stop = std::chrono::high_resolution_clock::now();
 
                         // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);

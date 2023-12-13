@@ -30,11 +30,11 @@ namespace binary_trees
 
                         graph_node_atr_t atr {};
 
-                        int insert_in_child (node_t &node_, size_t &child_index, spine_t<node_t> &spine_);
+                        std::pair<size_t, bool> insert_in_child (node_t &node_, size_t &child_index, spine_t<node_t> &spine_);
 
-                        int create_insert_in_child (const T &data_, const key_type &key_, 
-                                                    spine_t<node_t<T, key_type>> &spine_, 
-                                                    size_t &child_index_);
+                        std::pair<size_t, bool> create_insert_in_child (const T &data_, const key_type &key_, 
+                                                                        spine_t<node_t<T, key_type>> &spine_, 
+                                                                        size_t &child_index_);
 
                         void set_right_child_index (size_t index_) { right_child_index = index_; }
                         void set_left_child_index  (size_t index_) { left_child_index  = index_; }
@@ -69,8 +69,8 @@ namespace binary_trees
                         node_t () = default;
 
                         size_t rebalance (spine_t<node_t<T, key_type>> &spine_);
-                        size_t insert (node_t &node_, spine_t<node_t<T, key_type>> &spine_);
-                        size_t insert (const T &data_, const key_type &key_, spine_t<node_t<T, key_type>> &spine_);
+                        std::pair<size_t, bool> insert (node_t &node_, spine_t<node_t<T, key_type>> &spine_);
+                        std::pair<size_t, bool> insert (const T &data_, const key_type &key_, spine_t<node_t<T, key_type>> &spine_);
 
                         T get_data (const key_type &key_, const T &invalid_val, spine_t<node_t<T, key_type>> &spine_);
                         int count_elems_in_range (const key_type &low_key_, const key_type &high_key_, spine_t<node_t> &spine_);
@@ -98,28 +98,31 @@ namespace binary_trees
 //---------------------------------------------------~~~~~~Private~~~~~--------------------------------------------------------------------
 
         template <typename T, typename key_type>
-        int node_t<T, key_type>::insert_in_child (node_t &node_, size_t &child_index, spine_t<node_t> &spine_)
+        std::pair<size_t, bool>
+        node_t<T, key_type>::insert_in_child (node_t &node_, size_t &child_index, spine_t<node_t> &spine_)
         {
                 node_.parent_index = index;
                 if (child_index != INVALID)
-                        spine_[child_index].insert(node_, spine_);
+                        return spine_[child_index].insert(node_, spine_);
                 else
                         child_index = spine_.insert(node_);
-                return NODE_HEIGHT;
+                
+                return {NODE_HEIGHT, true};
         }
 
         template <typename T, typename key_type>
-        int node_t<T, key_type>::create_insert_in_child (const T &data_, const key_type &key_, 
-                                                         spine_t<node_t> &spine_,
-                                                         size_t &child_index_)
+        std::pair<size_t, bool>
+        node_t<T, key_type>::create_insert_in_child (const T &data_, const key_type &key_, 
+                                                     spine_t<node_t> &spine_,
+                                                     size_t &child_index_)
         {
                 auto new_node = node_t(data_, key_, spine_.get_size(), index);
                 if (child_index_ != INVALID)
-                        spine_[child_index_].insert(new_node, spine_);
+                        return spine_[child_index_].insert(new_node, spine_);
                 else
                         child_index_ = spine_.insert(new_node);
 
-                return NODE_HEIGHT;
+                return {NODE_HEIGHT, true};
         }
 
         template <typename T, typename key_type>
@@ -299,42 +302,50 @@ namespace binary_trees
         }
 
         template <typename T, typename key_type>
-        size_t node_t<T, key_type>::insert (node_t &node_, spine_t<node_t> &spine_)
+        std::pair<size_t, bool>
+        node_t<T, key_type>::insert (node_t &node_, spine_t<node_t> &spine_)
         {
+                std::pair<size_t, bool> branch_height_inserted {branch_height, false};
                 if (node_.get_key() < key) {
-                        branch_height = insert_in_child(node_, left_child_index, spine_) +
-                                        NODE_HEIGHT;
+                        branch_height_inserted = insert_in_child(node_, left_child_index, spine_);
+                        branch_height = branch_height_inserted.first + NODE_HEIGHT;
                         left_child_index = spine_[left_child_index].rebalance(spine_);
-                        size++;
+                        if (branch_height_inserted.second)
+                                size++;
                 } else if (node_.get_key() != key) {
-                        branch_height = insert_in_child(node_, right_child_index, spine_) +
-                                        NODE_HEIGHT;
+                        branch_height_inserted = insert_in_child(node_, right_child_index, spine_);
+                        branch_height = branch_height_inserted.first + NODE_HEIGHT;
                         right_child_index = spine_[right_child_index].rebalance(spine_);
-                        size++;
+                        if (branch_height_inserted.second)
+                                size++;
                 } else if (node_.key == key) {
-                        return 0;
+                        return {0, false};
                 }
 
-                return branch_height;
+                return {branch_height, branch_height_inserted.second};
         }
 
         template <typename T, typename key_type>
-        size_t node_t<T, key_type>::insert (const T &data_, const key_type &key_, spine_t<node_t> &spine_)
+        std::pair<size_t, bool>
+        node_t<T, key_type>::insert (const T &data_, const key_type &key_, spine_t<node_t> &spine_)
         {
+                std::pair<size_t, bool> branch_height_inserted {branch_height, false};
                 if (key_ < key) {
-                        branch_height = create_insert_in_child(data_, key_, spine_, left_child_index) +
-                                        NODE_HEIGHT;
+                        branch_height_inserted = create_insert_in_child(data_, key_, spine_, left_child_index);
+                        branch_height = branch_height_inserted.first + NODE_HEIGHT;
                         left_child_index = spine_[left_child_index].rebalance(spine_);
-                        size++;
+                        if (branch_height_inserted.second)
+                                size++;
                 } else if (key_ != key) {
-                        branch_height = create_insert_in_child(data_, key_, spine_, right_child_index) +
-                                        NODE_HEIGHT;
+                        branch_height_inserted = create_insert_in_child(data_, key_, spine_, right_child_index);
+                        branch_height = branch_height_inserted.first + NODE_HEIGHT;
                         right_child_index = spine_[right_child_index].rebalance(spine_);
-                        size++;
+                        if (branch_height_inserted.second)
+                                size++;
                 } else if (key_ == key) {
-                        return 0;
+                        return {0, false};
                 }
-                return branch_height;
+                return {branch_height, branch_height_inserted.second};
         }
 
         template <typename T, typename key_type>

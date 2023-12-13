@@ -63,7 +63,7 @@ vector<int> parse_input_data (vector<pair<char, pair<int, int>>> &input)
                         throw std::runtime_error("Unknown command.");
                 }
         }
-        // tree.graphviz_dump();
+        tree.graphviz_dump();
 
         return output_data;
 }
