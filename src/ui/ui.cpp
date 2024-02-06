@@ -10,7 +10,7 @@ using namespace std::chrono;
 
 namespace
 {
-        int get_number (const char *str, int &val)
+        int get_number (const std::string &str, int &val)
         {
                 val = stoi(str);
                 return length(val);
@@ -24,19 +24,22 @@ get_user_data ()
         int val2 = 0;
 
         vector<pair<char, pair<int, int>>> input {};
-        string input_str {};
-        getline(cin, input_str);
-        auto input_length = input_str.length();
+        char cmd = 0;
 
-        for (size_t i = 0; i < input_length; i++)
-                if (input_str[i] == 'k') {
-                        i += get_number(&input_str[++i], val1);
+        while (!cin.eof()) {
+                cin >> cmd;
+                if (cmd == 'k') {
+                        cin >> val1;
+                        
                         input.push_back({'k', {val1, 0}});
-                } else if (input_str[i] == 'q') {
-                        i += get_number(&input_str[++i], val1);
-                        i += get_number(&input_str[++i], val2);
+                } else if (cmd == 'q') {
+                        cin >> val1;
+                        cin >> val2;
+
                         input.push_back({'q', {val1, val2}});
                 }
+                cmd = '\0';
+        }
 
         if (std::cin.fail() && !std::cin.eof())
                 throw std::runtime_error("You need to enter \"k\" to add data and \"q\" to enter range.");
@@ -63,7 +66,7 @@ vector<int> parse_input_data (vector<pair<char, pair<int, int>>> &input)
                         throw std::runtime_error("Unknown command.");
                 }
         }
-        tree.graphviz_dump();
+        // tree.graphviz_dump();
 
         return output_data;
 }
