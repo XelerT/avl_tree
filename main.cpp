@@ -8,6 +8,8 @@ using namespace std;
 
 int main ()
 {
-        auto user_data = get_user_data();
-        print(parse_input_data(user_data));
+        std::vector<int> user_data = get_user_data<int>(std::cin);
+        std::vector<int> output = parse_input_data<int>(user_data.begin(), user_data.end());
+
+        print(output);
 }

@@ -43,7 +43,7 @@ namespace binary_trees
                         int distance (const key_type &low_key_, 
                                       const key_type &high_key_)
                         { 
-                                if (root_index != INVALID)
+                                if (root_index != INVALID && low_key_ < high_key_)
                                         return spine[root_index].distance(low_key_, high_key_, spine);
                                 else
                                         return 0;
